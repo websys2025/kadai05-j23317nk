@@ -4,17 +4,26 @@
     <title>演習課題5-2：外部APIの呼び出しテスト</title>
 </head>
 <body>
-    <h1 id="msg">何かのAPI</h1>
+    <h1 id="msg">数字API</h1>
     <form name="apiform"><p>
-        何かのフォーム：<input type="text" name="form_data">
+        数字（半角）：<input type="text" name="form_data">
         <button type="button" id="btn1" onclick="some_api(this.form)">実行</button>
     </p></form>
     
-    <div id="result"></div>
+    <div id="result">英語で表示されます</div>
     <script>
         async function some_api(myForm) {
             // ここにコードを書く
-            document.getElementById("result").innerHTML += myForm.form_data.value+"<br />";
+            const num = myForm.form_data.value;
+            if(!num.match(/^\d+$/)){
+                document.getElementById("result").innerHTML = "数字を入力してください";
+                return;
+            }
+
+            const res = await fetch(`http://numbersapi.com/${num}`);
+            const text = await res.text();
+
+            document.getElementById("result").innerHTML = text;
             document.apiform.reset();
         }
     </script>
